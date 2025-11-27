@@ -27,7 +27,7 @@ def try_import_yt_dlp():
     except Exception:
         return None
 
-def run_with_yt_dlp_module(ytdl, url, outtmpl, audio_only, cookies, progress_callback=None):
+def run_with_yt_dlp_module(ytdl, url, outtmpl, audio_only, progress_callback=None):
     """Run download using yt-dlp module.
 
     If `progress_callback` is provided it will be called as:
@@ -41,8 +41,7 @@ def run_with_yt_dlp_module(ytdl, url, outtmpl, audio_only, cookies, progress_cal
         "no_warnings": True,
     }
 
-    if cookies:
-        ytdl_opts["cookiefile"] = cookies
+    # cookies support removed; simplifies UI and CLI
 
     if audio_only:
         ytdl_opts.update({
@@ -106,12 +105,10 @@ def run_with_yt_dlp_module(ytdl, url, outtmpl, audio_only, cookies, progress_cal
                 return 1
     return 0
 
-def run_with_cli(url, outdir, audio_only, cookies):
+def run_with_cli(url, outdir, audio_only):
     cmd = ["yt-dlp", url, "-o", os.path.join(outdir, "%(title)s.%(ext)s")]
     if audio_only:
         cmd += ["-x", "--audio-format", "mp3"]
-    if cookies:
-        cmd += ["--cookies", cookies]
     print("Falling back to yt-dlp CLI. Running:", " ".join(cmd))
     return subprocess.call(cmd)
 
@@ -136,13 +133,7 @@ class BiliDownloaderGUI:
         self.dir_entry.insert(0, os.path.abspath("."))
         ttk.Button(self.dir_frame, text="Browse", command=self.browse_directory).pack(side="right", padx=(5, 0))
         
-        # Cookies File
-        ttk.Label(root, text="Cookies File (optional):", font=("Arial", 10, "bold")).pack(pady=(10, 0), padx=10, anchor="w")
-        self.cookies_frame = ttk.Frame(root)
-        self.cookies_frame.pack(pady=5, padx=10, fill="x")
-        self.cookies_entry = ttk.Entry(self.cookies_frame)
-        self.cookies_entry.pack(side="left", fill="x", expand=True)
-        ttk.Button(self.cookies_frame, text="Browse", command=self.browse_cookies).pack(side="right", padx=(5, 0))
+        # (Cookies option removed for simplicity)
         
         # Audio Only Checkbox
         self.audio_only_var = tk.BooleanVar()
@@ -151,14 +142,14 @@ class BiliDownloaderGUI:
         # Progress and Status
         ttk.Label(root, text="Status:", font=("Arial", 10, "bold")).pack(pady=(10, 0), padx=10, anchor="w")
         self.status_text = tk.Text(root, height=2, width=60)
-        self.status_text.pack(pady=5, padx=10, fill="x")
+        self.status_text.pack(pady=5, padx=10, fill="both", expand=True)
         self.status_text.config(state="disabled")
         
         # Progress bar and percentage/status label
         self.progress_status = ttk.Label(root, text="Idle")
         self.progress_status.pack(pady=(2, 0), padx=10, anchor="w")
         self.progress_frame = ttk.Frame(root)
-        self.progress_frame.pack(pady=5, padx=10, fill="x")
+        self.progress_frame.pack(pady=5, padx=10, fill="x", expand=True)
         self.progress_bar = ttk.Progressbar(self.progress_frame, orient="horizontal", mode="determinate")
         self.progress_bar.pack(side="left", fill="x", expand=True)
         self.percent_label = ttk.Label(self.progress_frame, text="0%", width=6)
@@ -175,10 +166,8 @@ class BiliDownloaderGUI:
             self.dir_entry.insert(0, folder)
     
     def browse_cookies(self):
-        file = filedialog.askopenfilename(filetypes=[("Text files", "*.txt"), ("All files", "*.*")])
-        if file:
-            self.cookies_entry.delete(0, tk.END)
-            self.cookies_entry.insert(0, file)
+        # cookies support removed; keep method stub in case of future use
+        return
     
     def log_status(self, message):
         self.status_text.config(state="normal")
@@ -190,7 +179,6 @@ class BiliDownloaderGUI:
     def download(self):
         url = self.url_entry.get().strip()
         outdir = self.dir_entry.get().strip()
-        cookies = self.cookies_entry.get().strip() or None
         audio_only = self.audio_only_var.get()
         
         if not url:
@@ -203,7 +191,7 @@ class BiliDownloaderGUI:
         self.status_text.delete(1.0, tk.END)
         self.status_text.config(state="disabled")
         
-        thread = threading.Thread(target=self._download_thread, args=(url, outdir, cookies, audio_only))
+        thread = threading.Thread(target=self._download_thread, args=(url, outdir, audio_only))
         thread.daemon = True
         thread.start()
 
@@ -232,14 +220,14 @@ class BiliDownloaderGUI:
         except Exception:
             pass
     
-    def _download_thread(self, url, outdir, cookies, audio_only):
+    def _download_thread(self, url, outdir, audio_only):
         try:
             os.makedirs(outdir, exist_ok=True)
             outtmpl = os.path.join(outdir, "%(title)s.%(ext)s")
             
             ytdl = try_import_yt_dlp()
             if ytdl is not None:
-                exit_code = run_with_yt_dlp_module(ytdl, url, outtmpl, audio_only, cookies, progress_callback=self._progress_callback)
+                exit_code = run_with_yt_dlp_module(ytdl, url, outtmpl, audio_only, progress_callback=self._progress_callback)
                 if exit_code == 0:
                     self.log_status("Download completed successfully!")
                     messagebox.showinfo("Success", "Download completed!")
@@ -251,7 +239,7 @@ class BiliDownloaderGUI:
                     messagebox.showerror("Error", "Download failed")
             else:
                 self.log_status("Falling back to yt-dlp CLI...")
-                rc = run_with_cli(url, outdir, audio_only, cookies)
+                rc = run_with_cli(url, outdir, audio_only)
                 if rc == 0:
                     self.log_status("Download completed successfully!")
                     messagebox.showinfo("Success", "Download completed!")
@@ -280,7 +268,6 @@ def main():
     parser.add_argument("url", nargs="?", help="Bilibili video or page URL")
     parser.add_argument("--output", "-o", default=".", help="Output directory (default: current dir)")
     parser.add_argument("--audio-only", "-a", action="store_true", help="Download audio only (mp3)")
-    parser.add_argument("--cookies", "-c", help="Path to cookies.txt (if needed for restricted content)")
     parser.add_argument("--gui", "-g", action="store_true", help="Launch GUI instead of CLI")
     args = parser.parse_args()
     
@@ -296,14 +283,14 @@ def main():
 
     ytdl = try_import_yt_dlp()
     if ytdl is not None:
-        exit_code = run_with_yt_dlp_module(ytdl, url, outtmpl, args.audio_only, args.cookies)
+        exit_code = run_with_yt_dlp_module(ytdl, url, outtmpl, args.audio_only)
         sys.exit(exit_code)
     else:
         # try to find yt-dlp binary
         if shutil.which("yt-dlp") is None:
             print("yt-dlp not found. Install with: pip install yt-dlp")
             sys.exit(2)
-        rc = run_with_cli(url, outdir, args.audio_only, args.cookies)
+        rc = run_with_cli(url, outdir, args.audio_only)
         sys.exit(rc)
 
 if __name__ == "__main__":
