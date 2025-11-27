@@ -46,12 +46,12 @@ sudo apt-get install ffmpeg
 ### GUI Mode (Recommended)
 
 ```bash
-python "import argparse.py."
+python "import bbl_dl.py."
 ```
 
 Or with the GUI flag:
 ```bash
-python "import argparse.py" --gui
+python "import bbl_dl.py" --gui
 ```
 
 Then:
@@ -63,7 +63,7 @@ Then:
 ### CLI Mode
 
 ```bash
-python "import argparse.py" <URL> [OPTIONS]
+python "import bbl_dl.py" <URL> [OPTIONS]
 ```
 
 **Options:**
@@ -75,13 +75,13 @@ python "import argparse.py" <URL> [OPTIONS]
 
 ```bash
 # Download video to current directory
-python "import argparse.py" "https://www.bilibili.com/video/BV1xx411c7mD"
+python "import bbl_dl.py" "https://www.bilibili.com/video/BV1xx411c7mD"
 
 # Download to custom folder
-python "import argparse.py" "https://www.bilibili.com/video/BV1xx411c7mD" -o "C:\Downloads"
+python "import bbl_dl.py" "https://www.bilibili.com/video/BV1xx411c7mD" -o "C:\Downloads"
 
 # Download audio only
-python "import argparse.py" "https://www.bilibili.com/video/BV1xx411c7mD" --audio-only
+python "import bbl_dl.py" "https://www.bilibili.com/video/BV1xx411c7mD" --audio-only
 ```
 
 ## Performance Tips
@@ -112,7 +112,7 @@ Install FFmpeg and make sure it's in your system PATH.
 
 ```
 pypy/
-├── import argparse.py    # Main application (GUI + CLI)
+├── import bbl_dl.py    # Main application (GUI + CLI)
 └── README.md             # This file
 ```
 
