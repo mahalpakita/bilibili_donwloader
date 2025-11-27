@@ -115,49 +115,90 @@ def run_with_cli(url, outdir, audio_only):
 class BiliDownloaderGUI:
     def __init__(self, root):
         self.root = root
-        self.root.title("Bilibili Downloader")
-        self.root.geometry("500x350")
+        self.root.title("✨ Bilibili Downloader ✨")
+        self.root.geometry("550x420")
+        self.root.config(bg="#f8f8f8")
         self.downloading = False
         
+        # Color palette
+        self.color_primary = "#de3e28"
+        self.color_accent = "#fe415a"
+        self.color_bg = "#f8f8f8"
+        self.color_text = "#333333"
+        
+        # Main container
+        main_frame = tk.Frame(root, bg=self.color_bg)
+        main_frame.pack(fill="both", expand=True, padx=15, pady=15)
+        
+        # Title
+        title = tk.Label(main_frame, text="🎬 Bilibili Downloader", font=("Segoe UI", 16, "bold"), 
+                        bg=self.color_bg, fg=self.color_primary)
+        title.pack(pady=(0, 15), anchor="w")
+        
         # URL Label and Entry
-        ttk.Label(root, text="Bilibili URL:", font=("Arial", 10, "bold")).pack(pady=(10, 0), padx=10, anchor="w")
-        self.url_entry = ttk.Entry(root, width=60)
-        self.url_entry.pack(pady=5, padx=10, fill="x")
+        url_label = tk.Label(main_frame, text="📺 Video URL:", font=("Segoe UI", 10, "bold"), 
+                            bg=self.color_bg, fg=self.color_text)
+        url_label.pack(pady=(10, 3), anchor="w")
+        self.url_entry = tk.Entry(main_frame, font=("Segoe UI", 10), relief="flat", 
+                                  bd=2, bg="white", fg=self.color_text)
+        self.url_entry.pack(pady=(0, 10), fill="x")
         
         # Output Directory
-        ttk.Label(root, text="Output Directory:", font=("Arial", 10, "bold")).pack(pady=(10, 0), padx=10, anchor="w")
-        self.dir_frame = ttk.Frame(root)
-        self.dir_frame.pack(pady=5, padx=10, fill="x")
-        self.dir_entry = ttk.Entry(self.dir_frame)
+        dir_label = tk.Label(main_frame, text="📁 Output Folder:", font=("Segoe UI", 10, "bold"),
+                            bg=self.color_bg, fg=self.color_text)
+        dir_label.pack(pady=(10, 3), anchor="w")
+        self.dir_frame = tk.Frame(main_frame, bg=self.color_bg)
+        self.dir_frame.pack(pady=(0, 10), fill="x")
+        self.dir_entry = tk.Entry(self.dir_frame, font=("Segoe UI", 10), relief="flat",
+                                  bd=2, bg="white", fg=self.color_text)
         self.dir_entry.pack(side="left", fill="x", expand=True)
         self.dir_entry.insert(0, os.path.abspath("."))
-        ttk.Button(self.dir_frame, text="Browse", command=self.browse_directory).pack(side="right", padx=(5, 0))
-        
-        # (Cookies option removed for simplicity)
+        browse_btn = tk.Button(self.dir_frame, text="📂 Browse", command=self.browse_directory,
+                              bg=self.color_primary, fg="white", font=("Segoe UI", 9, "bold"),
+                              relief="flat", bd=0, padx=12, pady=5, cursor="hand2")
+        browse_btn.pack(side="right", padx=(8, 0))
         
         # Audio Only Checkbox
         self.audio_only_var = tk.BooleanVar()
-        ttk.Checkbutton(root, text="Audio Only (MP3)", variable=self.audio_only_var).pack(pady=10, padx=10, anchor="w")
+        audio_check = tk.Checkbutton(main_frame, text="🎵 Audio Only (MP3)", variable=self.audio_only_var,
+                                    font=("Segoe UI", 10), bg=self.color_bg, fg=self.color_text,
+                                    activebackground=self.color_bg, activeforeground=self.color_primary,
+                                    selectcolor=self.color_bg)
+        audio_check.pack(pady=10, anchor="w")
         
         # Progress and Status
-        ttk.Label(root, text="Status:", font=("Arial", 10, "bold")).pack(pady=(10, 0), padx=10, anchor="w")
-        self.status_text = tk.Text(root, height=2, width=60)
-        self.status_text.pack(pady=5, padx=10, fill="both", expand=True)
+        status_label = tk.Label(main_frame, text="📊 Status:", font=("Segoe UI", 10, "bold"),
+                               bg=self.color_bg, fg=self.color_text)
+        status_label.pack(pady=(10, 3), anchor="w")
+        self.status_text = tk.Text(main_frame, height=2, width=60, font=("Segoe UI", 9),
+                                   relief="flat", bd=1, bg="white", fg=self.color_text,
+                                   highlightthickness=0)
+        self.status_text.pack(pady=(0, 8), fill="both", expand=True)
         self.status_text.config(state="disabled")
         
         # Progress bar and percentage/status label
-        self.progress_status = ttk.Label(root, text="Idle")
-        self.progress_status.pack(pady=(2, 0), padx=10, anchor="w")
-        self.progress_frame = ttk.Frame(root)
-        self.progress_frame.pack(pady=5, padx=10, fill="x", expand=True)
-        self.progress_bar = ttk.Progressbar(self.progress_frame, orient="horizontal", mode="determinate")
+        self.progress_status = tk.Label(main_frame, text="Idle", font=("Segoe UI", 9),
+                                       bg=self.color_bg, fg=self.color_accent)
+        self.progress_status.pack(pady=(5, 2), anchor="w")
+        self.progress_frame = tk.Frame(main_frame, bg=self.color_bg)
+        self.progress_frame.pack(pady=(0, 12), fill="x", expand=False)
+        self.progress_bar = tk.Canvas(self.progress_frame, height=8, bg="white", 
+                                     highlightthickness=1, highlightbackground="#e0e0e0")
         self.progress_bar.pack(side="left", fill="x", expand=True)
-        self.percent_label = ttk.Label(self.progress_frame, text="0%", width=6)
-        self.percent_label.pack(side="right", padx=(5, 0))
+        self.progress_bar.bind("<Configure>", self._on_progress_bar_configure)
+        self.progress_bar_width = 300
+        self.progress_bar_fill = None
+        self.percent_label = tk.Label(self.progress_frame, text="0%", width=5,
+                                     font=("Segoe UI", 9, "bold"), bg=self.color_bg,
+                                     fg=self.color_primary)
+        self.percent_label.pack(side="right", padx=(8, 0))
 
-        # Download Button (bigger)
-        self.download_btn = tk.Button(root, text="Download", command=self.download, bg="#4CAF50", fg="white", font=("Arial", 14, "bold"), height=2)
-        self.download_btn.pack(pady=10, padx=10, fill="x")
+        # Download Button (bigger and cute)
+        self.download_btn = tk.Button(main_frame, text="⬇️ Download Now", command=self.download,
+                                     bg=self.color_accent, fg="white", font=("Segoe UI", 12, "bold"),
+                                     relief="flat", bd=0, padx=20, pady=12, cursor="hand2",
+                                     activebackground=self.color_primary, activeforeground="white")
+        self.download_btn.pack(pady=(10, 0), fill="x")
     
     def browse_directory(self):
         folder = filedialog.askdirectory()
@@ -168,6 +209,10 @@ class BiliDownloaderGUI:
     def browse_cookies(self):
         # cookies support removed; keep method stub in case of future use
         return
+    
+    def _on_progress_bar_configure(self, event):
+        """Update progress bar width on canvas resize."""
+        self.progress_bar_width = event.width
     
     def log_status(self, message):
         self.status_text.config(state="normal")
@@ -204,17 +249,21 @@ class BiliDownloaderGUI:
                     p = max(0.0, min(100.0, float(percent)))
                 except Exception:
                     p = 0.0
-                self.progress_bar['value'] = p
-                self.percent_label.config(text=f"{p:.1f}%")
-                self.progress_status.config(text=f"{p:.1f}%   {speed}   ETA {eta}")
+                # update canvas-based progress bar
+                self.progress_bar.delete("fill")
+                if self.progress_bar_width > 0:
+                    fill_width = (p / 100.0) * self.progress_bar_width
+                    self.progress_bar.create_rectangle(0, 0, fill_width, 8, fill=self.color_accent, outline="")
+                self.percent_label.config(text=f"{p:.0f}%")
+                self.progress_status.config(text=f"🔄 {p:.0f}%   {speed}   {eta}", fg=self.color_accent)
             else:
                 # unknown percent - show speed/eta only
                 status = []
                 if speed:
                     status.append(speed)
                 if eta:
-                    status.append(f"ETA {eta}")
-                self.progress_status.config(text=" ".join(status) or "Downloading...")
+                    status.append(eta)
+                self.progress_status.config(text="🔄 " + " ".join(status) or "Downloading...", fg=self.color_accent)
         try:
             self.root.after(0, _update)
         except Exception:
