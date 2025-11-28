@@ -28,62 +28,29 @@ pip install yt-dlp
 ### 2. Install FFmpeg
 
 **Windows:**
-<<<<<<< HEAD
-- Using Chocolatey: `choco install ffmpeg`
-=======
 - Using Chocolatey: `choco install ffmpeg.`
->>>>>>> 1b4ae7571845ef4b7fd2422617cf3cc7c8ec03d8
 - Or download from [ffmpeg.org](https://ffmpeg.org/download.html) and add to PATH
 
-**macOS:**
-```bash
-brew install ffmpeg
-```
-
-**Linux:**
-```bash
-sudo apt-get install ffmpeg
-```
-
-## Usage
-
-### GUI Mode (Recommended)
-
-```bash
-<<<<<<< HEAD
-python "import argparse.py"
-=======
-python "import bbl_dl.py."
->>>>>>> 1b4ae7571845ef4b7fd2422617cf3cc7c8ec03d8
-```
-
-Or with the GUI flag:
-```bash
-<<<<<<< HEAD
-python "import argparse.py" --gui
-=======
-python "import bbl_dl.py" --gui
->>>>>>> 1b4ae7571845ef4b7fd2422617cf3cc7c8ec03d8
-```
 
 Then:
 1. Paste your Bilibili video URL
 2. Choose output folder
 3. Optionally select "Audio Only" for MP3 extraction
-<<<<<<< HEAD
-4. Click "⬇️ Download Now"
-=======
 4. Click "⬇️ Download Now."
->>>>>>> 1b4ae7571845ef4b7fd2422617cf3cc7c8ec03d8
+
+## Release
+
+- **Version:** v1.0.0 (Initial public release)
+- **Downloads included in this repository:**
+    - `release.zip` — contains `bbl-dl.exe` (CLI) and `bilibili_downloader.exe` (GUI) for Windows.
+    - `hakiri.ico` — application icon used in the builds.
+
+You can download the packaged executables from the repository Releases page or use the `release.zip` in this repository root. Note: FFmpeg is required at runtime for merging and audio extraction — install it separately and ensure `ffmpeg.exe` is available on PATH.
 
 ### CLI Mode
 
 ```bash
-<<<<<<< HEAD
-python "import argparse.py" <URL> [OPTIONS]
-=======
-python "import bbl_dl.py" <URL> [OPTIONS]
->>>>>>> 1b4ae7571845ef4b7fd2422617cf3cc7c8ec03d8
+bilibili_donwloader URL> [OPTIONS]
 ```
 
 **Options:**
@@ -94,24 +61,14 @@ python "import bbl_dl.py" <URL> [OPTIONS]
 **Examples:**
 
 ```bash
-# Download video to current directory
-<<<<<<< HEAD
-python "import argparse.py" "https://www.bilibili.com/video/BV1xx411c7mD"
+# Download video to the current directory
+bilibili_donwloader "https://www.bilibili.com/video/BV1xx411c7mD"
 
 # Download to custom folder
-python "import argparse.py" "https://www.bilibili.com/video/BV1xx411c7mD" -o "C:\Downloads"
+bilibili_donwloader "https://www.bilibili.com/video/BV1xx411c7mD" -o "C:\Downloads"
 
 # Download audio only
-python "import argparse.py" "https://www.bilibili.com/video/BV1xx411c7mD" --audio-only
-=======
-python "import bbl_dl.py" "https://www.bilibili.com/video/BV1xx411c7mD"
-
-# Download to custom folder
-python "import bbl_dl.py" "https://www.bilibili.com/video/BV1xx411c7mD" -o "C:\Downloads"
-
-# Download audio only
-python "import bbl_dl.py" "https://www.bilibili.com/video/BV1xx411c7mD" --audio-only
->>>>>>> 1b4ae7571845ef4b7fd2422617cf3cc7c8ec03d8
+bilibili_donwloader "https://www.bilibili.com/video/BV1xx411c7mD" --audio-only
 ```
 
 ## Performance Tips
@@ -135,19 +92,20 @@ Install FFmpeg and make sure it's in your system PATH.
 ### Slow downloads
 - Use a wired connection instead of WiFi
 - Check your internet speed
-- Try downloading at off-peak hours
+- Try downloading during off-peak hours
 - Close other bandwidth-heavy applications
 
 ## File Structure
 
 ```
 pypy/
-<<<<<<< HEAD
-├── import argparse.py    # Main application (GUI + CLI)
-=======
-├── import bbl_dl.py    # Main application (GUI + CLI)
->>>>>>> 1b4ae7571845ef4b7fd2422617cf3cc7c8ec03d8
-└── README.md             # This file
+├── bilibili_donwloader.py # Main application (GUI + CLI)
+├── (installed script)     # `bilibili_donwloader` (GUI launcher)
+├── README.md              # This file
+├── pyproject.toml         # Python package config
+├── requirements.txt       # Dependencies
+└── tools/                 # Helper scripts
+    └── convert_icon.py    # Icon conversion utility
 ```
 
 ## License
@@ -161,7 +119,3 @@ For issues or feature requests, check your yt-dlp installation is up to date:
 ```bash
 pip install --upgrade yt-dlp
 ```
-
----
-
-**Made with ❤️ for Bilibili fans**
