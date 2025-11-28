@@ -28,7 +28,11 @@ pip install yt-dlp
 ### 2. Install FFmpeg
 
 **Windows:**
+<<<<<<< HEAD
 - Using Chocolatey: `choco install ffmpeg`
+=======
+- Using Chocolatey: `choco install ffmpeg.`
+>>>>>>> 1b4ae7571845ef4b7fd2422617cf3cc7c8ec03d8
 - Or download from [ffmpeg.org](https://ffmpeg.org/download.html) and add to PATH
 
 **macOS:**
@@ -46,24 +50,40 @@ sudo apt-get install ffmpeg
 ### GUI Mode (Recommended)
 
 ```bash
+<<<<<<< HEAD
 python "import argparse.py"
+=======
+python "import bbl_dl.py."
+>>>>>>> 1b4ae7571845ef4b7fd2422617cf3cc7c8ec03d8
 ```
 
 Or with the GUI flag:
 ```bash
+<<<<<<< HEAD
 python "import argparse.py" --gui
+=======
+python "import bbl_dl.py" --gui
+>>>>>>> 1b4ae7571845ef4b7fd2422617cf3cc7c8ec03d8
 ```
 
 Then:
 1. Paste your Bilibili video URL
 2. Choose output folder
 3. Optionally select "Audio Only" for MP3 extraction
+<<<<<<< HEAD
 4. Click "⬇️ Download Now"
+=======
+4. Click "⬇️ Download Now."
+>>>>>>> 1b4ae7571845ef4b7fd2422617cf3cc7c8ec03d8
 
 ### CLI Mode
 
 ```bash
+<<<<<<< HEAD
 python "import argparse.py" <URL> [OPTIONS]
+=======
+python "import bbl_dl.py" <URL> [OPTIONS]
+>>>>>>> 1b4ae7571845ef4b7fd2422617cf3cc7c8ec03d8
 ```
 
 **Options:**
@@ -75,6 +95,7 @@ python "import argparse.py" <URL> [OPTIONS]
 
 ```bash
 # Download video to current directory
+<<<<<<< HEAD
 python "import argparse.py" "https://www.bilibili.com/video/BV1xx411c7mD"
 
 # Download to custom folder
@@ -82,6 +103,15 @@ python "import argparse.py" "https://www.bilibili.com/video/BV1xx411c7mD" -o "C:
 
 # Download audio only
 python "import argparse.py" "https://www.bilibili.com/video/BV1xx411c7mD" --audio-only
+=======
+python "import bbl_dl.py" "https://www.bilibili.com/video/BV1xx411c7mD"
+
+# Download to custom folder
+python "import bbl_dl.py" "https://www.bilibili.com/video/BV1xx411c7mD" -o "C:\Downloads"
+
+# Download audio only
+python "import bbl_dl.py" "https://www.bilibili.com/video/BV1xx411c7mD" --audio-only
+>>>>>>> 1b4ae7571845ef4b7fd2422617cf3cc7c8ec03d8
 ```
 
 ## Performance Tips
@@ -112,7 +142,11 @@ Install FFmpeg and make sure it's in your system PATH.
 
 ```
 pypy/
+<<<<<<< HEAD
 ├── import argparse.py    # Main application (GUI + CLI)
+=======
+├── import bbl_dl.py    # Main application (GUI + CLI)
+>>>>>>> 1b4ae7571845ef4b7fd2422617cf3cc7c8ec03d8
 └── README.md             # This file
 ```
 
