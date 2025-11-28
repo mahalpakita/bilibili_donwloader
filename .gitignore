@@ -1,0 +1,45 @@
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+build/
+dist/
+*.spec
+*.egg-info/
+pip-wheel-metadata/
+
+# PyInstaller
+*.manifest
+*.log
+
+# Distribution artifacts
+release.zip
+*.exe
+
+# IDEs and editors
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Archives
+*.rar
+
+# Misc
+*.pyc
+*.pyo
+*.pyd
+
+# Keep project-specific assets (icons, docs) tracked explicitly
+# (do not ignore .ico files so your icon stays in the repo)

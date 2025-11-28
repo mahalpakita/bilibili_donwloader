@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bbl-dl"
+version = "0.1.0"
+description = "Cute Bilibili downloader with GUI and CLI (yt-dlp powered)"
+readme = "README.md"
+requires-python = ">=3.7"
+dependencies = [
+  "yt-dlp"
+]
+
+[project.scripts]
+bbl-dl = "bbl_dl:main"
+bbl-dl-gui = "bbl_dl:run_gui"
