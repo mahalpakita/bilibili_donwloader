@@ -47,30 +47,6 @@ Then:
 
 You can download the packaged executables from the repository Releases page or use the `release.zip` in this repository root. Note: FFmpeg is required at runtime for merging and audio extraction — install it separately and ensure `ffmpeg.exe` is available on PATH.
 
-### CLI Mode
-
-```bash
-bilibili_donwloader URL> [OPTIONS]
-```
-
-**Options:**
-- `-o, --output DIR` — Output directory (default: current directory)
-- `-a, --audio-only` — Extract audio only as MP3
-- `-g, --gui` — Launch GUI instead of CLI
-
-**Examples:**
-
-```bash
-# Download video to the current directory
-bilibili_donwloader "https://www.bilibili.com/video/BV1xx411c7mD"
-
-# Download to custom folder
-bilibili_donwloader "https://www.bilibili.com/video/BV1xx411c7mD" -o "C:\Downloads"
-
-# Download audio only
-bilibili_donwloader "https://www.bilibili.com/video/BV1xx411c7mD" --audio-only
-```
-
 ## Performance Tips
 
 - **Wired connection** is faster than WiFi
@@ -95,27 +71,4 @@ Install FFmpeg and make sure it's in your system PATH.
 - Try downloading during off-peak hours
 - Close other bandwidth-heavy applications
 
-## File Structure
 
-```
-pypy/
-├── bilibili_donwloader.py # Main application (GUI + CLI)
-├── (installed script)     # `bilibili_donwloader` (GUI launcher)
-├── README.md              # This file
-├── pyproject.toml         # Python package config
-├── requirements.txt       # Dependencies
-└── tools/                 # Helper scripts
-    └── convert_icon.py    # Icon conversion utility
-```
-
-## License
-
-Open source. Feel free to modify and distribute.
-
-## Support
-
-For issues or feature requests, check your yt-dlp installation is up to date:
-
-```bash
-pip install --upgrade yt-dlp
-```
