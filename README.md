@@ -1,4 +1,4 @@
-# ✨ Bilibili Downloader ✨
+#  Bilibili Downloader 
 
 A fast, easy-to-use downloader for Bilibili videos with a cute, modern GUI and CLI support.
 
@@ -9,7 +9,6 @@ A fast, easy-to-use downloader for Bilibili videos with a cute, modern GUI and C
 -  **Audio-only option** to extract MP3 from videos
 -  **Real-time progress bar** with speed and ETA display
 -  **Optimized for speed** with parallel fragment downloads
--  **Modern, cute design** with custom color scheme
 
 ## Requirements
 
