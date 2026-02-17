@@ -122,7 +122,21 @@ class BiliDownloaderGUI:
     def __init__(self, root):
         self.root = root
         self.root.title("✨ Bilibili Downloader ✨")
-        self.root.geometry("550x420")
+        
+        # Set window icon
+        icon_path = os.path.join(os.path.dirname(__file__), "hakiri.ico")
+        if os.path.exists(icon_path):
+            try:
+                self.root.iconbitmap(icon_path)
+                # Fix for taskbar icon on Windows
+                if sys.platform == "win32":
+                    import ctypes
+                    myappid = 'mycompany.myproduct.subproduct.version' # arbitrary string
+                    ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+            except Exception:
+                pass
+
+        self.root.geometry("550x520")
         self.root.config(bg="#f8f8f8")
         self.downloading = False
         
@@ -146,7 +160,8 @@ class BiliDownloaderGUI:
                             bg=self.color_bg, fg=self.color_text)
         url_label.pack(pady=(10, 3), anchor="w")
         self.url_entry = tk.Entry(main_frame, font=("Segoe UI", 10), relief="flat", 
-                                  bd=2, bg="white", fg=self.color_text)
+                                  bd=2, bg="white", fg=self.color_text,
+                                  highlightthickness=1, highlightbackground="red", highlightcolor="red")
         self.url_entry.pack(pady=(0, 10), fill="x")
         
         # Output Directory
@@ -156,7 +171,8 @@ class BiliDownloaderGUI:
         self.dir_frame = tk.Frame(main_frame, bg=self.color_bg)
         self.dir_frame.pack(pady=(0, 10), fill="x")
         self.dir_entry = tk.Entry(self.dir_frame, font=("Segoe UI", 10), relief="flat",
-                                  bd=2, bg="white", fg=self.color_text)
+                                  bd=2, bg="white", fg=self.color_text,
+                                  highlightthickness=1, highlightbackground="red", highlightcolor="red")
         self.dir_entry.pack(side="left", fill="x", expand=True)
         self.dir_entry.insert(0, os.path.abspath("."))
         browse_btn = tk.Button(self.dir_frame, text="📂 Browse", command=self.browse_directory,
@@ -178,7 +194,7 @@ class BiliDownloaderGUI:
         status_label.pack(pady=(10, 3), anchor="w")
         self.status_text = tk.Text(main_frame, height=2, width=60, font=("Segoe UI", 9),
                                    relief="flat", bd=1, bg="white", fg=self.color_text,
-                                   highlightthickness=0)
+                                   highlightthickness=1, highlightbackground="red", highlightcolor="red")
         self.status_text.pack(pady=(0, 8), fill="both", expand=True)
         self.status_text.config(state="disabled")
         
